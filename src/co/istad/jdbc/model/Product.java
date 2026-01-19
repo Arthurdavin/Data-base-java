@@ -10,7 +10,8 @@ public class Product {
     private Integer qty;
     private Boolean isDeleted;
 
-    public Product(){}
+    public Product() {
+    }
 
     public Product(String code, String name, BigDecimal price, Boolean isDeleted, Integer qty) {
         this.code = code;
