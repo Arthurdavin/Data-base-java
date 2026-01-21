@@ -36,9 +36,9 @@ public class JdbcProgram {
                 }
                 case 2 -> {
                     View.printHeader("Search Product");
-                    String keyword = InputUtil.getText("Enter code : ");
+                    String codeProduct = InputUtil.getText("Enter code : ");
                     Product p = new Product();
-                    p.setCode(keyword);
+                    p.setCode(codeProduct);
                     List<Product> results = productDao.search(p);
 
                     if (results.isEmpty()) {
@@ -68,73 +68,56 @@ public class JdbcProgram {
                     }
                 }
                 case 4->{
+
                     View.printHeader("Update a product by code");
-                    Integer id = InputUtil.getInteger("Enter product ID to update: ");
-                    String code = InputUtil.getText("Enter new code: ");
+                    String code = InputUtil.getText("Enter code: ");
                     String name = InputUtil.getText("Enter new name: ");
                     BigDecimal price = InputUtil.getMoney("Enter new price: ");
                     Integer qty = InputUtil.getInteger("Enter new qty: ");
 
-                    Product updateProduct = new Product();
-                    updateProduct.setId(id);
-                    updateProduct.setCode(code);
+                    Product updateProduct= new Product();
                     updateProduct.setName(name);
                     updateProduct.setPrice(price);
                     updateProduct.setQty(qty);
-                    updateProduct.setDeleted(false);
 
                     try{
-                        int affectedRow = productDao.updateById(updateProduct);
-                        if (affectedRow>0){
-                            View.printHeader("Product update successfully...!");
-                        }else {
-                            View.printHeader("Product not found or already deletes!");
+                        int affectedRow = productDao.updateByCode(code,updateProduct);
+                        if(affectedRow>0){
+                            View.printHeader("Update product is successfully...!");
                         }
+                        else {
+                            View.printHeader("Update product it not affected ");
+                        }
+                        productDao.updateByCode(code,updateProduct);
                     }catch (RuntimeException e){
                         View.printHeader(e.getMessage());
                     }
 
                 }
-                case 5->{
+                case 5 -> {
 
-//                    View.printHeader("Delete a product by code");
-//                    String code = InputUtil.getText("Enter product code to delete: ");
-//
-//                    try {
-//                        String confirmation = InputUtil.getText("Are you sure to delete [Y/n]");
-//                        if(confirmation.equalsIgnoreCase("y")){
-//                            int affectedRow = productDao.deleteByCode(code);
-//
-//                            if (affectedRow > 0) {
-//                                View.printHeader("Product(s) deleted successfully!");
-//                            } else {
-//                                View.printHeader("Product not found or already deleted!");
-//                            }
-//                        }else {
-//                            View.printHeader("Delete operation cancelled");
-//                        }
-//
-//
-//                    } catch (RuntimeException e) {
-//                        View.printHeader(e.getMessage());
-//                    }
                     View.printHeader("Delete a product by code");
                     String code = InputUtil.getText("Enter product code to delete: ");
-                    try{
-                        String confirmation = InputUtil.getText("Are you sure to delete [Y/N]");
+
+                    try {
+                        String confirmation = InputUtil.getText("Are you sure to delete [Y/n]");
                         if(confirmation.equalsIgnoreCase("y")){
                             int affectedRow = productDao.deleteByCode(code);
-                            if(affectedRow>0){
-                                View.printHeader("Product(s) deleted successfully...!");
-                            }else {
+
+                            if (affectedRow > 0) {
+                                View.printHeader("Product(s) deleted successfully!");
+                            } else {
                                 View.printHeader("Product not found or already deleted!");
                             }
                         }else {
-                            View.printHeader("Delete operation cancelled...");
+                            View.printHeader("Delete operation cancelled");
                         }
-                    }catch (RuntimeException e){
+
+
+                    } catch (RuntimeException e) {
                         View.printHeader(e.getMessage());
                     }
+
                 }
                 case 0-> System.exit(0);
                 default -> System.out.println("Invalid option");
